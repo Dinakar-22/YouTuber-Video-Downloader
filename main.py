@@ -12,9 +12,6 @@ st.set_page_config(
     layout="centered"
 )
 
-"""directory= '/Downloads'
-if not os.path.exists(directory):
-    os.makedirs(directory)"""
 
 c30, c31, c32 = st.columns([0.2, 0.09, 3.2])
 
