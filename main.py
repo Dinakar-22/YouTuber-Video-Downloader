@@ -6,12 +6,15 @@ from datetime import timedelta
 
 icon = Image.open("yt-downloader.png")
 
+directory= 'downloads/'
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
 st.set_page_config(
     page_icon=icon,
     page_title=" YouTuber Video Downloader ",
     layout="centered"
 )
-
 
 c30, c31, c32 = st.columns([0.2, 0.09, 3.2])
 
@@ -44,8 +47,10 @@ try :
 
     dowload = yt.streams.get_highest_resolution()
 
+    st.write("please wait Download Is on the Way")
+
     if st.button:
-        dowload.download(filename= file_name)
+        dowload.download(filename= file_name, output_path= "downloads/")
         st.success('Download Complete', icon="✅")       
         st.balloons()
         
