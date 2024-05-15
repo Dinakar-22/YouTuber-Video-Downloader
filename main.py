@@ -47,7 +47,7 @@ try :
 
     if st.download_button:
         {
-            label="Download Video",
+            label == "Download Video",
             file_name=title_vid,
             st.success('Download Complete', icon="✅"),
             st.balloons()
