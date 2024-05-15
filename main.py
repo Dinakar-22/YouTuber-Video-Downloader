@@ -45,13 +45,12 @@ try :
 
     st.write("please wait Download Is on the Way")
 
-    if st.download_button:
-        {
-            label == "Download Video",
-            file_name=title_vid,
-            st.success('Download Complete', icon="✅"),
-            st.balloons()
-       }
+    if st.download_button:  
+        
+        label = "Download Video",
+        file_name = title_vid,
+        st.success('Download Complete', icon="✅"),
+        st.balloons()
         
 except Exception : 
 
