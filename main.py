@@ -1,8 +1,9 @@
-import streamlit as st
-from pytube import YouTube
+from io import BytesIO
+from pathlib import Path
 from PIL import Image
-import os 
+import streamlit as st
 from datetime import timedelta
+from pytube import YouTube
 
 icon = Image.open("yt-downloader.png")
 
@@ -11,6 +12,15 @@ st.set_page_config(
     page_title=" YouTuber Video Downloader ",
     layout="centered"
 )
+
+st.markdown(f"""
+            <style>
+            .stApp {{background-image: url("https://images.unsplash.com/photo-1523821741446-edb2b68bb7a0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); 
+                     background-attachment: fixed;
+                     background-size: cover}}
+         </style>
+         """, unsafe_allow_html=True)
+
 
 c30, c31, c32 = st.columns([0.2, 0.09, 3.2])
 
@@ -27,30 +37,33 @@ with c32:
 
 st.subheader(' ', divider='rainbow')
 
+@st.cache_data(show_spinner=False)
+def download_video(url):
+    buffer = BytesIO()
+    youtube_video = YouTube(url)
+    video = youtube_video.streams.get_highest_resolution()
+    default_filename = video.default_filename
+    return default_filename, buffer
 
-    
-video_link = st.text_input("Enter the YouTube Video Url:")
-
-yt = YouTube(video_link)
-
-file_name = yt.title
-time_length   = (str(timedelta(seconds=yt.length)))
-image_yt = yt.thumbnail_url
-
-st.subheader(f'Title: {yt.title}\nLength: `{time_length}` seconds')
-st.image(image_yt, caption="Thumbnail")
-    
-
-dowload = yt.streams.get_highest_resolution()
-    
-st.button(dowload.download(filename= file_name))
-st.success('Download Complete', icon="✅")       
-st.balloons()
-        
-
-
-rimaryColor="#F63366"
-backgroundColor="#000000"
-secondaryBackgroundColor="#C4CAD0"
-textColor="#FCF7FF"
-font="Press Start 2P"        
+def main():
+    url = st.text_input("Insert Youtube URL:")
+    yt_video = YouTube(url)
+    image_yt = yt_video.thumbnail_url
+    time_length   = (str(timedelta(seconds=yt_video.length)))
+    if url:
+        with st.spinner("Downloading Video Stream from Youtube..."):
+            default_filename, buffer = download_video(url)
+        st.write("Title: ",yt_video.title)
+        st.write(f'Time Length: `{time_length}` seconds')
+        st.image(image_yt, caption="Thumbnail")
+        title_vid = Path(default_filename).with_suffix(".mp3").name
+        st.download_button(
+            label="Download video",
+            data=buffer,
+            file_name=title_vid,
+        )
+    else:
+        if len(url) == 0:
+            st.write("please Enter the Url")
+if __name__ == "__main__":
+    main()
