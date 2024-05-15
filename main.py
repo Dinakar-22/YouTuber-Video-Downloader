@@ -61,7 +61,7 @@ def main():
             st.write("Title: ",yt_video.title)
             st.write(f'Time Length: `{time_length}` seconds')
             st.image(image_yt, caption="Thumbnail")
-            title_vid = Path(default_filename).with_suffix(".mp3").name
+            title_vid = Path(default_filename).with_suffix(".mp4").name
             st.download_button(
                 label="Download video",
                 data=buffer,
