@@ -37,7 +37,6 @@ def download_audio_to_buffer(url):
     return default_filename, buffer
 
 def main():
-    st.title("Download Video from Youtube")
     url = st.text_input("Insert Youtube URL:")
     yt_video = YouTube(url)
     image_yt = yt_video.thumbnail_url
@@ -54,5 +53,7 @@ def main():
             data=buffer,
             file_name=title_vid,
         )
+    else:
+        st.write("please Enter the Url")
 if __name__ == "__main__":
     main()
