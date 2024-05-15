@@ -1,9 +1,8 @@
-from io import BytesIO
-from pathlib import Path
-from PIL import Image
 import streamlit as st
-from datetime import timedelta
 from pytube import YouTube
+from PIL import Image
+import os 
+from datetime import timedelta
 
 icon = Image.open("yt-downloader.png")
 
@@ -28,32 +27,30 @@ with c32:
 
 st.subheader(' ', divider='rainbow')
 
-@st.cache_data(show_spinner=False)
-def download_audio_to_buffer(url):
-    buffer = BytesIO()
-    youtube_video = YouTube(url)
-    video = youtube_video.streams.get_highest_resolution()
-    default_filename = video.default_filename
-    return default_filename, buffer
 
-def main():
-    url = st.text_input("Insert Youtube URL:")
-    yt_video = YouTube(url)
-    image_yt = yt_video.thumbnail_url
-    time_length   = (str(timedelta(seconds=yt_video.length)))
-    if url:
-        with st.spinner("Downloading Video Stream from Youtube..."):
-            default_filename, buffer = download_audio_to_buffer(url)
-        st.write("Title: ",yt_video.title)
-        st.write(f'Time Length: `{time_length}` seconds')
-        st.image(image_yt, caption="Thumbnail")
-        title_vid = Path(default_filename).with_suffix(".mp3").name
-        st.download_button(
-            label="Download video",
-            #data=buffer,
-            file_name=title_vid,
-        )
-    else:
-        st.write("please Enter the Url")
-if __name__ == "__main__":
-    main()
+    
+video_link = st.text_input("Enter the YouTube Video Url:")
+
+yt = YouTube(video_link)
+
+file_name = yt.title
+time_length   = (str(timedelta(seconds=yt.length)))
+image_yt = yt.thumbnail_url
+
+st.subheader(f'Title: {yt.title}\nLength: `{time_length}` seconds')
+st.image(image_yt, caption="Thumbnail")
+    
+
+dowload = yt.streams.get_highest_resolution()
+    
+st.button(dowload.download(filename= file_name))
+st.success('Download Complete', icon="✅")       
+st.balloons()
+        
+
+
+rimaryColor="#F63366"
+backgroundColor="#000000"
+secondaryBackgroundColor="#C4CAD0"
+textColor="#FCF7FF"
+font="Press Start 2P"        
