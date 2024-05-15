@@ -6,10 +6,6 @@ from datetime import timedelta
 
 icon = Image.open("yt-downloader.png")
 
-directory= 'downloads/'
-if not os.path.exists(directory):
-    os.makedirs(directory)
-
 st.set_page_config(
     page_icon=icon,
     page_title=" YouTuber Video Downloader ",
@@ -37,7 +33,7 @@ try :
 
     yt = YouTube(video_link)
 
-    file_name = yt.title
+    title_vid = yt.title
     time_length   = (str(timedelta(seconds=yt.length)))
     image_yt = yt.thumbnail_url
 
@@ -49,11 +45,13 @@ try :
 
     st.write("please wait Download Is on the Way")
 
-    if st.button:
-        dowload.download(filename= file_name, output_path= "downloads/")
-        st.success('Download Complete', icon="✅")       
-        st.balloons()
-        
+    if st.download_button:
+        {
+            label="Download Video",
+            file_name=title_vid,
+            st.success('Download Complete', icon="✅"),
+            st.balloons()
+       }
         
 except Exception : 
 
