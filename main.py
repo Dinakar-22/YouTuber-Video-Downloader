@@ -47,23 +47,26 @@ def download_video(url):
 
 def main():
     url = st.text_input("Insert Youtube URL:")
-    yt_video = YouTube(url)
-    image_yt = yt_video.thumbnail_url
-    time_length   = (str(timedelta(seconds=yt_video.length)))
-    if url:
-        with st.spinner("Downloading Video Stream from Youtube..."):
-            default_filename, buffer = download_video(url)
-        st.write("Title: ",yt_video.title)
-        st.write(f'Time Length: `{time_length}` seconds')
-        st.image(image_yt, caption="Thumbnail")
-        title_vid = Path(default_filename).with_suffix(".mp3").name
-        st.download_button(
-            label="Download video",
-            data=buffer,
-            file_name=title_vid,
-        )
-    else:
-        if len(url) == 0:
-            st.write("please Enter the Url")
+    size = len(url)
+    if size <= 0:
+        st.write("Please Enter the URL...")
+    else :
+        yt_video = YouTube(url)
+
+        image_yt = yt_video.thumbnail_url
+        time_length   = (str(timedelta(seconds=yt_video.length)))
+        if url:
+            with st.spinner("Downloading Video Stream from Youtube..."):
+                default_filename, buffer = download_video(url)
+            st.write("Title: ",yt_video.title)
+            st.write(f'Time Length: `{time_length}` seconds')
+            st.image(image_yt, caption="Thumbnail")
+            title_vid = Path(default_filename).with_suffix(".mp3").name
+            st.download_button(
+                label="Download video",
+                data=buffer,
+                file_name=title_vid,
+            )
+    
 if __name__ == "__main__":
     main()
