@@ -1,5 +1,3 @@
-from io import BytesIO
-from pathlib import Path
 from PIL import Image
 import streamlit as st
 from datetime import timedelta
@@ -37,36 +35,30 @@ with c32:
 
 st.subheader(' ', divider='rainbow')
 
-@st.cache_data(show_spinner=False)
-def download_video(url):
-    buffer = BytesIO()
-    youtube_video = YouTube(url)
-    video = youtube_video.streams.get_highest_resolution()
-    default_filename = video.default_filename
-    return default_filename, buffer
-
 def main():
-    url = st.text_input("Insert Youtube URL:")
+
+    url = st.text_input("Enter the url :")
+    yt = YouTube(url)
+    time_length   = (str(timedelta(seconds=yt.length)))
     size = len(url)
+
     if size <= 0:
         st.write("Please Enter the URL...")
-    else :
-        yt_video = YouTube(url)
+        
+    else:
 
-        image_yt = yt_video.thumbnail_url
-        time_length   = (str(timedelta(seconds=yt_video.length)))
-        if url:
-            with st.spinner("Downloading Video Stream from Youtube..."):
-                default_filename, buffer = download_video(url)
-            st.write("Title: ",yt_video.title)
-            st.write(f'Time Length: `{time_length}` seconds')
-            st.image(image_yt, caption="Thumbnail")
-            title_vid = Path(default_filename).with_suffix(".mp4").name
-            st.download_button(
-                label="Download video",
-                data=buffer,
-                file_name=title_vid,
-            )
-    
-if __name__ == "__main__":
+        vidoe = yt.streams.get_highest_resolution()
+        st.subheader(f'Title : {yt.title} ')
+        st.write(f'Time Duraction : `{time_length}`')
+        yt_thumbnail = yt.thumbnail_url
+        st.image(yt_thumbnail, caption="`Video Thumbnail`")
+
+        if st.button("Download"):
+            try:
+                vidoe.download()
+            except Exception:
+                st.write("Error Occured while downloading vidoe please try again")
+            st.write("Download Completed Successfully")
+
+if __name__ == "__main__" :
     main()
